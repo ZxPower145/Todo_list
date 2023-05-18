@@ -27,7 +27,7 @@ window = sg.Window('Todo List App',
                    font=("Helvetica", 15))
 
 while True:
-    event, values = window.read(timeout=10)
+    event, values = window.read(timeout=500)
     window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case "Add":
