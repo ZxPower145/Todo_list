@@ -8,15 +8,25 @@ clock = sg.Text(key="clock")
 
 label = sg.Text("Type in a todo")
 input_box = sg.InputText(tooltip="Enter todo: ", key="todo")
-add_button = sg.Button("Add")
+add_button = sg.Button(image_source="files/add.png",
+                       mouseover_colors="green",
+                       tooltip="Add",
+                       key="Add")
+
 list_box = sg.Listbox(values=functions.list_r(),
                       key='todos',
                       enable_events=True,
                       size=(45, 10))
 
-edit_btn = sg.Button("Edit")
+edit_btn = sg.Button(image_source="files/edit.png",
+                     tooltip="Edit",
+                     mouseover_colors="brown",
+                     key="Edit")
 
-complete_btn = sg.Button("Complete")
+complete_btn = sg.Button(image_source="files/complete.png",
+                         mouseover_colors="green",
+                         tooltip="Complete",
+                         key="Complete")
 
 exit_btn = sg.Button("Exit")
 
@@ -24,8 +34,9 @@ window = sg.Window('Todo List App',
                    layout=[[clock],
                            [label],
                            [input_box, add_button],
-                           [list_box, edit_btn],
-                           [complete_btn, exit_btn]],
+                           [list_box],
+                           [edit_btn, complete_btn],
+                           [exit_btn]],
                    font=("Helvetica", 15))
 
 while True:
@@ -36,8 +47,11 @@ while True:
             todos = functions.list_r()
             new_todo = values['todo']
             todos.append(new_todo + "\n")
-            functions.todos_w(todos)
-            window['todos'].update(values=todos)
+            if new_todo != "":
+                functions.todos_w(todos)
+                window['todos'].update(values=todos)
+            else:
+                sg.popup("Please type in an item first!", text_color="red", font=("Times new roman", 15))
         case "Edit":
             try:
                 selected_todo = values['todos'][0]
@@ -52,7 +66,10 @@ while True:
             except IndexError:
                 sg.popup("Please select an item first!", text_color="red", font=("Times new roman", 15))
         case "todos":
-            window['todo'].update(value=values['todos'][0].replace("\n", ""))
+            try:
+                window['todo'].update(value=values['todos'][0].replace("\n", ""))
+            except IndexError:
+                sg.popup("Please select a valid item", text_color="red", font=("Times new roman", 15))
         case "Complete":
             try:
                 todo_to_complete = values['todos'][0]
